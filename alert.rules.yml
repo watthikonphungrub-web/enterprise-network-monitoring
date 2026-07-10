@@ -1,0 +1,12 @@
+groups:
+  - name: network_alerts
+    rules:
+      - alert: HighNetworkTraffic
+        # เช็กทราฟฟิกขาออก ถ้าเกิน 100 KB/s ให้เตือน
+        expr: rate(node_network_transmit_bytes_total[1m]) / 1024 > 100
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "🚨 เตือนภัย: ทราฟฟิกเซิร์ฟเวอร์พุ่งสูงปรี๊ด!"
+          description: "ตอนนี้มีการดึงข้อมูลจากเซิร์ฟเวอร์หนักมากเกิน 100 KB/s ต่อเนื่อง 1 นาที โปรดตรวจสอบด่วน!"
