@@ -2,7 +2,7 @@
 
 ## 📌 Project Overview
 This project demonstrates an automated, End-to-End monitoring infrastructure tailored for enterprise environments. It focuses on tracking system health, monitoring network performance, and analyzing internet usage statistics in real-time.
-images_screenshot
+![Monitoring Dashboard](images_screenshot.png)
 
 ## 🛠️ Architecture & Technologies
 * **Infrastructure as Code (IaC):** Utilized **Terraform** to provision and manage Docker containers automatically.
