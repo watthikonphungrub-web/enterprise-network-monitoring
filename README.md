@@ -15,3 +15,27 @@ This project demonstrates an automated, End-to-End monitoring infrastructure tai
 * Automated deployment using a single `terraform apply` command.
 * SNMP v2c/v3 integration for closed-system network appliances.
 * Scalable configuration ready for enterprise deployment.
+
+# Enterprise Network & Server Monitoring Project
+
+This project demonstrates an automated, End-to-End monitoring infrastructure tailored for enterprise environments. It provides real-time visibility into server health using industry-standard Observability tools.
+
+## Architecture & Technologies
+* **Infrastructure as Code (IaC):** Utilized **Terraform** to provision and manage Docker containers automatically.
+* **Metrics Collection:** Deployed **Prometheus** alongside `node_exporter` for server-level metrics.
+* **Visualization:** Designed custom **Grafana** dashboards to provide insights into system performance.
+
+## Key Features
+* **Automated Deployment:** Deploy the entire stack using a single `docker-compose up -d` command.
+* **Comprehensive Monitoring:** Tracks essential system resources in real-time.
+
+## Dashboard Overview
+This dashboard tracks the following key metrics:
+* **CPU Utilization:** Real-time monitoring of CPU load.
+* **Memory Usage:** Tracking RAM consumption.
+* **Disk Space:** Monitoring available storage capacity.
+
+## How to Run
+* Clone this repository: `git clone <your-repo-link>`
+* Deploy the stack: `docker-compose up -d`
+* Access Grafana at: `http://localhost:3000`
