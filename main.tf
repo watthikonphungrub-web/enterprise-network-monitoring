@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     docker = {
-      source  = "kreuzwerker/docker"
+      source = "kreuzwerker/docker"
     }
   }
 }
@@ -44,8 +44,8 @@ resource "docker_container" "prometheus" {
   }
   networks_advanced {
     name = docker_network.monitoring_net.name
-}
-volumes {
+  }
+  volumes {
     host_path      = "${abspath(path.cwd)}/prometheus.yml"
     container_path = "/etc/prometheus/prometheus.yml"
   }
@@ -82,13 +82,13 @@ resource "docker_image" "alertmanager" {
 resource "docker_container" "alertmanager" {
   image = docker_image.alertmanager.image_id
   name  = "alertmanager"
-  
+
   # เปิดพอร์ต 9093 ให้เราเข้าไปดูหน้าเว็บของ Alertmanager ได้
   ports {
     internal = 9093
     external = 9093
   }
-  
+
   # จับเข้า Network วงเดียวกับ Prometheus
   networks_advanced {
     name = docker_network.monitoring_net.name
@@ -131,18 +131,77 @@ resource "docker_container" "cadvisor" {
     read_only      = true
   }
 }
-# 1. สั่งให้ Terraform ไปดาวน์โหลดพิมพ์เขียวของ SNMP Exporter มาเตรียมไว้
 resource "docker_image" "snmp_exporter" {
   name         = "prom/snmp-exporter:latest"
-  keep_locally = true
+  keep_locally = false
 }
 
-# 2. สั่งสร้าง Container วุ้นแปลภาษา และเปิดประตูพอร์ต 9116 ให้มัน
 resource "docker_container" "snmp_exporter" {
   name  = "snmp_exporter"
-  image = docker_image.snmp_exporter.name
+  image = docker_image.snmp_exporter.image_id
+
   ports {
     internal = 9116
     external = 9116
+  }
+
+  networks_advanced {
+    name = docker_network.monitoring_net.name
+  }
+
+  volumes {
+    host_path      = "${abspath(path.cwd)}/snmp_config/snmp.yml"
+    container_path = "/etc/snmp_exporter/snmp.yml "
+  }
+}
+
+# ----------------------------------------
+# Loki (Log Storage)
+# ----------------------------------------
+
+resource "docker_image" "loki" {
+  name         = "grafana/loki:latest"
+  keep_locally = false
+}
+
+resource "docker_container" "loki" {
+  image = docker_image.loki.image_id
+  name  = "loki"
+
+  ports {
+    internal = 3100
+    external = 3100
+  }
+
+  networks_advanced {
+    name = docker_network.monitoring_net.name
+  }
+
+  volumes {
+    host_path      = "${abspath(path.cwd)}/loki-config.yml"
+    container_path = "/etc/loki/local-config.yaml"
+  }
+
+  command = [
+    "-config.file=/etc/loki/local-config.yaml"
+  ]
+}
+resource "docker_image" "snmp_simulator" {
+  name = "prom/snmp-exporter:latest"
+  keep_locally = true
+}
+
+resource "docker_container" "snmp_simulator" {
+  name  = "snmp_simulator"
+  image = docker_image.snmp_simulator.image_id
+  restart = "always"
+
+  ports {
+    internal = 9116
+    external = 9117
+  }
+
+  networks_advanced {
+    name = docker_network.monitoring_net.name
   }
 }

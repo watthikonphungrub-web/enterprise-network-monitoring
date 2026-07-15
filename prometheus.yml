@@ -20,11 +20,11 @@ scrape_configs:
     params:
       module: [if_mib]
     static_configs:
-      - targets: ['172.25.96.31']
+      - targets: ['172.18.0.9']
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 172.17.0.2:9116
+        replacement: snmp_exporter:9116

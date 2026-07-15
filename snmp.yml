@@ -1,0 +1,6 @@
+default:
+  walk:
+    - sysDescr
+    - sysUpTime
+  version: 2
+  community: public
